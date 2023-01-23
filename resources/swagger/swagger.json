@@ -1,0 +1,1117 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "API for mobile && js applications.",
+        "version": "1.0.0",
+        "title": "GBKSOFT Test API"
+    },
+    "security": [
+        {
+            "Bearer": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "AnyBody",
+            "description": "Actions available without authentication"
+        },
+        {
+            "name": "User",
+            "description": "Actions available for authenticated user"
+        },
+        {
+            "name": "General",
+            "description": "General purpose methods"
+        },
+        {
+            "name": "Account",
+            "description": "User authentication, manage and details, email confirmation and authentication"
+        },
+        {
+            "name": "Tokens",
+            "description": "Manage User Access Tokens"
+        },
+        {
+            "name": "Email",
+            "description": "User email confirmation"
+        },
+        {
+            "name": "Password",
+            "description": "User change and recovery password"
+        },
+        {
+            "name": "Pages",
+            "description": "Static Pages"
+        }
+    ],
+    "paths": {
+        "/v1/user/login/{type}": {
+            "post": {
+                "security": [],
+                "summary": "Create access token for APP using social account",
+                "tags": [
+                    "AnyBody",
+                    "Account"
+                ],
+                "operationId": "userCreateAccessTokenUsingSocialAccount",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "facebook",
+                                "linkedin",
+                                "google",
+                                "twitter",
+                                "sign-in-with-apple"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "description": "Get token facebook example: https://www.facebook.com/dialog/oauth?client_id={client_id}&response_type=token&redirect_uri={redirect_uri}&scope={scope}"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status201"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/token"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+        "/v1/user/login": {
+            "post": {
+                "security": [],
+                "summary": "Create access token for APP",
+                "tags": [
+                    "AnyBody",
+                    "Account"
+                ],
+                "operationId": "userCreateAccessToken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "admin@nosend.net",
+                                        "description": "E-mail Minimum 2, maximum 255 characters"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "passWORD1",
+                                        "description": "Minimum 2, maximum 255 characters"
+                                    },
+                                    "deviceName": {
+                                        "type": "string",
+                                        "example": "Swagger",
+                                        "description": "Optional Device name to set as token name. If not set - User-Agent header will be used"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status201"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/token"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+        "/v1/user/register": {
+            "post": {
+                "security": [],
+                "summary": "Create user for APP",
+                "tags": [
+                    "AnyBody",
+                    "Account"
+                ],
+                "operationId": "userCreate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@nosend.net",
+                                        "description": "Minimum 2, maximum 255 characters"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "passWORD1",
+                                        "description": "Minimum 2, maximum 255 characters"
+                                    },
+                                    "deviceName": {
+                                        "type": "string",
+                                        "example": "Swagger",
+                                        "description": "Optional Device name to set as token name. If not set - User-Agent header will be used"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/token"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+        "/v1/user/current": {
+            "get": {
+                "summary": "Current user for APP",
+                "tags": [
+                    "User",
+                    "Account"
+                ],
+                "operationId": "userCurrent",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/user"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    }
+                }
+            }
+        },
+        "/v1/user/logout": {
+            "post": {
+                "summary": "Logout current user",
+                "tags": [
+                    "User",
+                    "Account"
+                ],
+                "operationId": "userLogout",
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/204"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    }
+                }
+            }
+        },
+
+        "/v1/user/change-password": {
+            "patch": {
+                "summary": "Change User Password",
+                "tags": [
+                    "User",
+                    "Password",
+                    "Account"
+                ],
+                "operationId": "userChangePassword",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "description": "Minimum 2, maximum 255 characters"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/204"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+        "/v1/user/recovery-password": {
+            "post": {
+                "security": [],
+                "summary": "Recovery user password by email",
+                "tags": [
+                    "AnyBody",
+                    "Password",
+                    "Account"
+                ],
+                "operationId": "userRecoveryPasswordByEmail",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/recoveryPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/204"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+        "/v1/user/new-password": {
+            "post": {
+                "security": [],
+                "summary": "Recovery user password by email",
+                "tags": [
+                    "AnyBody",
+                    "Password",
+                    "Account"
+                ],
+                "operationId": "userRecoveryPasswordChange",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/recoveryPassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/user"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+
+        "/v1/email/resend": {
+            "post": {
+                "security": [],
+                "summary": "Resend verification link",
+                "tags": [
+                    "AnyBody",
+                    "Account",
+                    "Email"
+                ],
+                "operationId": "emailResendVerification",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@nosend.net"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/204"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+        "/v1/email/verification": {
+            "post": {
+                "security": [],
+                "summary": "Verification email by token",
+                "tags": [
+                    "AnyBody",
+                    "Account",
+                    "Email"
+                ],
+                "operationId": "emailVerification",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/204"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/422"
+                    }
+                }
+            }
+        },
+
+        "/v1/user/token": {
+            "get": {
+
+                "summary": "User Tokens list",
+                "tags": [
+                    "User",
+                    "Tokens"
+                ],
+                "operationId": "tokensIndex",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/perPage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/viewToken"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    }
+                }
+            }
+        },
+        "/v1/user/token/{id}": {
+            "delete": {
+                "tags": [
+                    "User",
+                    "Tokens"
+                ],
+                "summary": "Remove selected token",
+                "operationId": "deleteToken",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Token Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "$ref": "#/components/responses/204"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404"
+                    }
+                }
+            }
+        },
+
+        "/v1/config": {
+            "get": {
+                "security": [],
+                "summary": "Rest application config",
+                "tags": [
+                    "AnyBody",
+                    "General"
+                ],
+                "operationId": "configIndex",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/config"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/v1/pages": {
+            "get": {
+                "security": [],
+                "summary": "Static pages list",
+                "tags": [
+                    "AnyBody",
+                    "Pages"
+                ],
+                "operationId": "pagesIndex",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/perPage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/staticPage"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    }
+                }
+            }
+        },
+        "/v1/pages/{slug}": {
+            "get": {
+                "security": [],
+                "summary": "Static page view",
+                "tags": [
+                    "AnyBody",
+                    "Pages"
+                ],
+                "operationId": "pagesView",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "slug",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/status200"
+                                        },
+                                        {
+                                            "properties": {
+                                                "result": {
+                                                    "$ref": "#/components/schemas/staticPage"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    }
+                }
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/rest"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "Bearer": {
+                "description": "",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": ""
+            }
+        },
+        "responses": {
+            "204": {
+                "description": "No Response",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status204"
+                        }
+                    }
+                }
+            },
+            "400": {
+                "description": "Bad Request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status400"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "description": "Unauthorized",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status401"
+                        }
+                    }
+                }
+            },
+            "403": {
+                "description": "Forbidden",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status403"
+                        }
+                    }
+                }
+            },
+            "404": {
+                "description": "Not Found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status404"
+                        }
+                    }
+                }
+            },
+            "422": {
+                "description": "Unprocessable Entity",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status422"
+                        }
+                    }
+                }
+            },
+            "500": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status500"
+                        }
+                    }
+                }
+            },
+            "503": {
+                "description": "Service Unavailable",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/status503"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "responseModel": {
+                "type": "object",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "result": {
+                        "type": "object"
+                    }
+                }
+            },
+            "validateError": {
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "type": "string",
+                        "example": "userId"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "User ID must be an integer."
+                    }
+                }
+            },
+            "status200": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "200 OK",
+                        "properties": {
+                        }
+                    }
+                ]
+            },
+            "status201": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "201 Created",
+                        "properties": {
+                            "message": {
+                                "example": "Created"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status204": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "204 No Content",
+                        "properties": {
+                        }
+                    }
+                ]
+            },
+            "status400": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "400 Bad Request",
+                        "properties": {
+                            "message": {
+                                "example": "Bad Request"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status401": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "401 Unauthorized",
+                        "properties": {
+                            "message": {
+                                "example": "Unauthorized"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status403": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "403 Forbidden",
+                        "properties": {
+                            "message": {
+                                "example": "Forbidden"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status404": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "401 Not Found",
+                        "properties": {
+                            "message": {
+                                "example": "Not Found"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status422": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "422 Unprocessable Entity",
+                        "properties": {
+                            "message": {
+                                "example": "Unprocessable Entity"
+                            },
+                            "result": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/validateError"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "status500": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "500 Internal Server Error",
+                        "properties": {
+                            "message": {
+                                "example": "Internal Server Error"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status503": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/responseModel"
+                    },
+                    {
+                        "title": "503 Service Unavailable",
+                        "properties": {
+                            "message": {
+                                "example": "Service Unavailable"
+                            }
+                        }
+                    }
+                ]
+            },
+            "user": {
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            "token": {
+                "description": "Token, that returned after login",
+                "type": "object",
+                "required": [
+                    "token",
+                    "expiredAt"
+                ],
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "expiredAt": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "viewToken": {
+                "description": "Display Token Representation (to view list and delte)",
+                "type": "object",
+                "required": [
+                    "token",
+                    "expiredAt"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1",
+                        "format": "int32"
+                    },
+                    "deviceName": {
+                        "type": "string",
+                        "example": "My Mobile Phone"
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "example": "1644916327",
+                        "format": "int32"
+                    },
+                    "expiredAt": {
+                        "type": "integer",
+                        "example": "1645521127",
+                        "format": "int32"
+                    }
+                }
+            },
+            "staticPage": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    }
+                }
+            },
+            "config": {
+                "type": "object",
+                "properties": {
+                    "version": {
+                        "type": "object",
+                        "properties": {
+                            "major": {
+                                "type": "integer"
+                            },
+                            "minor": {
+                                "type": "integer"
+                            },
+                            "patch": {
+                                "type": "integer"
+                            },
+                            "commit": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "properties": {}
+                    },
+                    "errors": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                }
+            },
+            "recoveryPasswordRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "Email"
+                    }
+                }
+            },
+            "recoveryPassword": {
+                "type": "object",
+                "properties": {
+                    "resetToken": {
+                        "type": "string",
+                        "description": "Password reset token"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Minimum 2, maximum 255 characters"
+                    },
+                    "confirmPassword": {
+                        "type": "string",
+                        "description": "Minimum 2, maximum 255 characters"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Minimum 2, maximum 255 characters"
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "page": {
+                "in": "query",
+                "name": "page",
+                "description": "The number of page.",
+                "required": false,
+                "example": 1,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1
+                }
+            },
+            "perPage": {
+                "in": "query",
+                "name": "perPage",
+                "description": "The number of items returned per page",
+                "required": false,
+                "example": 20,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 20
+                }
+            }
+        }
+    }
+}
